@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ilovecl.dao.StudentDao">
+    <select id="queryById" resultType="Student">
+        SELECT * FROM student WHERE id = #{id}
+    </select>
+
+    <select id="queryByEmail" resultType="Student">
+        SELECT * FROM student WHERE email = #{email}
+    </select>
+
+    <select id="queryByName" resultType="Student">
+        SELECT * FROM student WHERE name = #{name}
+    </select>
+
+    <select id="queryAll" resultSets="List" resultType="Student">
+        SELECT * FROM student
+    </select>
+
+    <insert id="add" parameterType="Student" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO student (name, password, sexual, email, phone)
+        VALUE (#{name}, #{password}, #{sexual}, #{email}, #{phone})
+    </insert>
+
+    <update id="update" parameterType="Student">
+        UPDATE student SET
+        name=#{name},
+        password=#{password},
+        sexual=#{sexual},
+        email=#{email},
+        phone=#{phone}
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Student">
+        DELETE FROM student WHERE id=#{id}
+    </delete>
+</mapper>
