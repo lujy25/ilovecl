@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--配置SpringMVC-->
+    <!--1. 开启注解模式：注解的处理，格式化，JSON等功能-->
+    <mvc:annotation-driven/>
+
+    <!--静态资源默认servlet配置：静态资源与"/"-->
+    <mvc:default-servlet-handler/>
+    <mvc:resources mapping="/student/js/**" location="WEB-INF/jsp/student/js/"/>
+    <mvc:resources mapping="/student/css/**" location="WEB-INF/jsp/student/css/"/>
+    <mvc:resources mapping="/student/icon/**" location="WEB-INF/jsp/student/icon/"/>
+    <mvc:resources mapping="/admin/js/**" location="WEB-INF/jsp/admin/js/"/>
+    <mvc:resources mapping="/admin/css/**" location="WEB-INF/jsp/admin/css/"/>
+    <mvc:resources mapping="/admin/icon/**" location="WEB-INF/jsp/admin/icon/"/>
+
+    <!--配置JSP-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--配置文件上传-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+    </bean>
+    <!--<bean id="multipartResolver"-->
+    <!--class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+
+    <!--&lt;!&ndash; one of the properties available; the maximum file size in bytes &ndash;&gt;-->
+    <!--<property name="maxUploadSize" value="100000"/>-->
+
+    <!--</bean>-->
+
+    <!--web相关的bena-->
+    <context:component-scan base-package="com.ilovecl.web"/>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--拦截以localhost:8080/student/开头的URL请求，包括localhost:8080/admin/dashboard和localhost:8080/admin/dashboard/detail类型-->
+            <mvc:mapping path="/admin/**"/>
+            <!--排除在拦截名单外的URL请求-->
+            <!--首先是注册请求，这个在任何时候都不能拦截-->
+            <mvc:exclude-mapping path="/admin/register"/>
+            <!--然后是登录请求-->
+            <mvc:exclude-mapping path="/admin/login"/>
+            <!--下面的是一些资源文件，比如图片、CSS文件、JS文件等-->
+            <mvc:exclude-mapping path="/admin/common/**"/>
+            <mvc:exclude-mapping path="/admin/css/**"/>
+            <mvc:exclude-mapping path="/admin/js/**"/>
+            <!--当有URL被拦截后，调用下面这个拦截器StudentSessionInterceptor来处理，StudentSessionInterceptor决定了是放行还是拦截-->
+            <bean class="com.ilovecl.interceptor.AdminSessionInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <!--拦截以localhost:8080/student/开头的URL请求，包括localhost:8080/student/dashboard和localhost:8080/student/dashboard/detail类型-->
+            <mvc:mapping path="/student/**"/>
+            <!--排除在拦截名单外的URL请求-->
+            <!--首先是注册请求，这个在任何时候都不能拦截-->
+            <mvc:exclude-mapping path="/student/register"/>
+            <!--然后是登录请求-->
+            <mvc:exclude-mapping path="/student/login"/>
+            <!--下面的是一些资源文件，比如图片、CSS文件、JS文件等-->
+            <mvc:exclude-mapping path="/student/common/**"/>
+            <mvc:exclude-mapping path="/student/css/**"/>
+            <mvc:exclude-mapping path="/student/js/**"/>
+            <!--当有URL被拦截后，调用下面这个拦截器StudentSessionInterceptor来处理，StudentSessionInterceptor决定了是放行还是拦截-->
+            <bean class="com.ilovecl.interceptor.StudentSessionInterceptor"/>
+        </mvc:interceptor>
+
+
+    </mvc:interceptors>
+
+</beans>
