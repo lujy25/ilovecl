@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ilovecl.dao.UrgentRepairDao">
+    <select id="queryById" resultType="UrgentRepair">
+        SELECT * FROM urgentRepair WHERE id = #{id}
+    </select>
+
+    <select id="queryByRepairId" resultType="UrgentRepair">
+        SELECT * FROM urgentRepair WHERE repairId = #{repairId}
+    </select>
+
+    <select id="queryByStudentId" resultSets="List" resultType="UrgentRepair">
+        SELECT * FROM urgentRepair WHERE studentId = #{studentId}
+    </select>
+
+    <select id="queryAll" resultSets="List" resultType="UrgentRepair">
+        SELECT * FROM urgentRepair
+    </select>
+
+    <insert id="add" parameterType="UrgentRepair" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO urgentRepair (status, repairId, studentId, createTime)
+        VALUE (#{status}, #{repairId}, #{studentId}, #{createTime})
+    </insert>
+
+    <delete id="delete" parameterType="UrgentRepair">
+        DELETE FROM urgentRepair WHERE id=#{id}
+    </delete>
+
+    <update id="update" parameterType="UrgentRepair">
+        UPDATE urgentRepair SET
+        status=#{status},
+        repairId=#{repairId},
+        studentId=#{studentId},
+        createTime=#{createTime}
+        WHERE id=#{id}
+    </update>
+
+</mapper>
